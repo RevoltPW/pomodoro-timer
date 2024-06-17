@@ -135,9 +135,13 @@ class PomodoroTimer(QWidget):
         edit_tasks_action.triggered.connect(self.edit_tasks)
         self.menu.addAction(edit_tasks_action)
 
-        change_color_action = QAction(QIcon(os.path.join(ICON_PATH, "change_color.svg")), 'Change Color', self)
+        change_color_action = QAction(QIcon(os.path.join(ICON_PATH, "change_color.svg")), 'Change Background Color', self)
         change_color_action.triggered.connect(self.change_color)
         self.menu.addAction(change_color_action)
+
+        change_font_color_action = QAction(QIcon(os.path.join(ICON_PATH, "change_color.svg")), 'Change Font Color', self)
+        change_font_color_action.triggered.connect(self.change_font_color)
+        self.menu.addAction(change_font_color_action)
 
         change_opacity_action = QAction(QIcon(os.path.join(ICON_PATH, "change_opacity.svg")), 'Change Opacity', self)
         change_opacity_action.triggered.connect(self.change_opacity)
@@ -146,6 +150,8 @@ class PomodoroTimer(QWidget):
         exit_action = QAction(QIcon(os.path.join(ICON_PATH, "exit.svg")), 'Exit', self)
         exit_action.triggered.connect(self.close)
         self.menu.addAction(exit_action)
+
+        self.menu_button.setMenu(self.menu)
 
         self.menu_button.setMenu(self.menu)
     def initTimer(self):
@@ -313,18 +319,36 @@ class PomodoroTimer(QWidget):
             self.tasks = []
         self.update_task_list()
 
+    def change_font_color(self):
+        current_color = self.timer_label.palette().color(QPalette.WindowText)
+        color = QColorDialog.getColor(current_color, self, "Choose Font Color")
+        if color.isValid():
+            font_color = color.name()
+            self.set_font_color(font_color)
+            self.save_ui_config()
+
+    def set_font_color(self, color):
+        background_color = self.timer_label.styleSheet().split("background-color: rgba(")[-1].split(");")[0]
+        self.timer_label.setStyleSheet(f"font-size: 30px; color: {color}; background-color: rgba({background_color}); padding: 10px; border-radius: 10px;")
+        self.completed_tasks_label.setStyleSheet(f"font-size: 14px; color: {color}; background: transparent; padding: 5px; border-radius: 5px;")
+        for i in range(self.task_list.count()):
+            item = self.task_list.item(i)
+            item.setForeground(QColor(color))
+
     def change_color(self):
-        color = QColorDialog.getColor()
+        current_color = QColor(0, 0, 0, int(0.5 * 255))
+        color = QColorDialog.getColor(current_color, self, "Choose Background Color")
         if color.isValid():
             rgba = color.getRgb()
             background_color = f"background-color: rgba({rgba[0]}, {rgba[1]}, {rgba[2]}, {rgba[3]/255});"
-            self.timer_label.setStyleSheet(f"font-size: 30px; color: white; {background_color} padding: 10px; border-radius: 10px;")
+            font_color = self.timer_label.palette().color(QPalette.WindowText).name()
+            self.timer_label.setStyleSheet(f"font-size: 30px; color: {font_color}; {background_color} padding: 10px; border-radius: 10px;")
             self.play_pause_button.setStyleSheet(f"{background_color} padding: 5px; border-radius: 5px;")
             self.reset_button.setStyleSheet(f"{background_color} padding: 5px; border-radius: 5px;")
             self.break_button.setStyleSheet(f"{background_color} padding: 5px; border-radius: 5px;")
             self.menu_button.setStyleSheet(f"{background_color} padding: 5px; border-radius: 5px;")
             self.edit_task_button.setStyleSheet(f"{background_color} padding: 5px; border-radius: 5px;")
-            self.completed_tasks_label.setStyleSheet(f"font-size: 14px; color: white; {background_color} padding: 5px; border-radius: 5px;")
+            #self.completed_tasks_label.setStyleSheet(f"font-size: 14px; color: {font_color}; {background_color} padding: 5px; border-radius: 5px;")
             self.save_ui_config()
 
     def change_opacity(self):
@@ -353,6 +377,7 @@ class PomodoroTimer(QWidget):
         settings.setValue('windowOpacity', self.windowOpacity())
         color_styles = self.timer_label.styleSheet().split("background-color: rgba(")[-1].split(");")[0]
         settings.setValue('backgroundColor', color_styles)
+        settings.setValue('fontColor', self.timer_label.palette().color(QPalette.WindowText).name())
         settings.setValue('geometry', self.saveGeometry())
         settings.setValue('startTime', self.start_time.toString())
         settings.setValue('breakTime', self.break_time.toString())
@@ -362,13 +387,14 @@ class PomodoroTimer(QWidget):
         opacity = settings.value('windowOpacity', 0.5, type=float)
         self.setWindowOpacity(opacity)
         background_color = settings.value('backgroundColor', "0, 0, 0, 0.5")
-        self.timer_label.setStyleSheet(f"font-size: 30px; color: white; background-color: rgba({background_color}); padding: 10px; border-radius: 10px;")
+        font_color = settings.value('fontColor', "#FFFFFF")  # Default to white if not set
+        self.timer_label.setStyleSheet(f"font-size: 30px; color: {font_color}; background-color: rgba({background_color}); padding: 10px; border-radius: 10px;")
         self.play_pause_button.setStyleSheet(f"background-color: rgba({background_color}); padding: 5px; border-radius: 5px;")
         self.reset_button.setStyleSheet(f"background-color: rgba({background_color}); padding: 5px; border-radius: 5px;")
         self.break_button.setStyleSheet(f"background-color: rgba({background_color}); padding: 5px; border-radius: 5px;")
         self.menu_button.setStyleSheet(f"background-color: rgba({background_color}); padding: 5px; border-radius: 5px;")
         self.edit_task_button.setStyleSheet(f"background-color: rgba({background_color}); padding: 5px; border-radius: 5px;")
-        self.completed_tasks_label.setStyleSheet(f"font-size: 14px; color: white; background-color: rgba({background_color}); padding: 5px; border-radius: 5px;")
+        self.completed_tasks_label.setStyleSheet(f"font-size: 14px; color: {font_color}; background: transparent; padding: 5px; border-radius: 5px;")
         if settings.contains('geometry'):
             self.restoreGeometry(settings.value('geometry'))
         if settings.contains('startTime'):
@@ -377,6 +403,8 @@ class PomodoroTimer(QWidget):
             self.timer_label.setText(self.time_left.toString('mm:ss'))
         if settings.contains('breakTime'):
             self.break_time = QTime.fromString(settings.value('breakTime'))
+        self.set_font_color(font_color)
+
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
