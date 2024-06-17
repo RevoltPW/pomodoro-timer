@@ -10,12 +10,14 @@ Stay productive and manage your time effectively with our sleek and simple Pomod
 
 ## Features
 
-- **Pomodoro Timer**: 25-minute focus sessions
-- **Break Timer**: 5-minute breaks
-- **Task List**: Manage your tasks and mark them as complete
-- **Customizable**: Change colors and opacity to suit your style
-- **Stay on Top**: Always on top of other windows
-- **Sound Notifications**: Alerts you when time is up
+
+- 🕒 **Pomodoro Timer**: 25-minute focus sessions
+- ☕ **Break Timer**: 5-minute breaks
+- ✅ **Task List**: Manage your tasks and mark them as complete
+- 🎨 **Customizable**: Change colors and opacity to suit your style
+- 📌 **Stay on Top**: Always on top of other windows
+- 🔔 **Sound Notifications**: Alerts you when time is up
+
 
 ## Installation
 
@@ -56,12 +58,11 @@ To run the app in the background and access it easily, add an alias to your shel
    ```sh
    alias pomodoro='nohup python3 /path/to/pomodoro-timer/pomodoro.py > /path/to/pomodoro-timer/pomodoro.log 2>&1 &'
    ```
-    - We use the nohup command to run the script detached from the console:
-    - nohup: Runs the command such that it ignores the hangup signal.
-    - python3 pomodoro.py: The command to run your Python script.
-    - > pomodoro.log: Redirects the standard output to pomodoro.log.
-    - 2>&1: Redirects the standard error to the same file descriptor as standard output.
-    - &: Runs the command in the background.
+    - `nohup`: Command run the script detached from the console.
+    - `python3 pomodoro.py`: To run your Python script.
+    - `pomodoro.log`: Redirects the standard output to pomodoro.log.
+    - `2>&1`: Redirects the standard error to the same file descriptor as standard output.
+    - `&`: Runs the command in the background.
 
 3. **Source `.bashrc_aliases`**:
    ```sh

@@ -41,6 +41,7 @@ class PomodoroTimer(QWidget):
         super().__init__()
         self.is_paused = False
         self.is_break = False
+        self.is_running = False  # Add this attribute to track if the timer has started
         self.start_time = QTime(0, 25, 0)
         self.break_time = QTime(0, 5, 0)
         self.time_left = self.start_time
@@ -158,8 +159,9 @@ class PomodoroTimer(QWidget):
             self.start_timer()
 
     def start_timer(self):
-        self.is_break = False
-        self.time_left = self.start_time
+        if not self.is_running:
+            self.time_left = self.start_time if not self.is_break else self.break_time
+            self.is_running = True
         self.timer.start(1000)
         self.play_pause_button.setIcon(QIcon(os.path.join(ICON_PATH, "pause.svg")))
 
@@ -183,6 +185,7 @@ class PomodoroTimer(QWidget):
     def reset_timer(self):
         self.timer.stop()
         self.play_pause_button.setIcon(QIcon(os.path.join(ICON_PATH, "start.svg")))
+        self.is_running = False  # Reset running state
         self.time_left = self.start_time if not self.is_break else self.break_time
         self.timer_label.setText(self.time_left.toString('mm:ss'))
 
@@ -195,6 +198,7 @@ class PomodoroTimer(QWidget):
             self.play_pause_button.setIcon(QIcon(os.path.join(ICON_PATH, "start.svg")))
             self.sound_effect.play()
             self.time_left = self.start_time if not self.is_break else self.break_time
+            self.is_running = False  # Reset running state
 
     def show_set_timer_dialog(self):
         self.timer_dialog = QWidget()
