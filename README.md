@@ -54,7 +54,7 @@ To run the app in the background and access it easily, add an alias to your shel
 
 2. **Add the Alias**:
    ```sh
-   alias pomodoro='nohup python3 /path/to/pomodoroapp/pomodoro.py > /path/to/pomodoroapp/pomodoro.log 2>&1 &'
+   alias pomodoro='nohup python3 /path/to/pomodoro-timer/pomodoro.py > /path/to/pomodoro-timer/pomodoro.log 2>&1 &'
    ```
     - We use the nohup command to run the script detached from the console:
     - nohup: Runs the command such that it ignores the hangup signal.
@@ -88,7 +88,7 @@ This batch script will allow you to start your Python script in a detached mode 
 
      ```batch
      @echo off
-     start "" pythonw.exe "C:\path\to\your\pomodoroapp\pomodoro.py"
+     start "" pythonw.exe "C:\path\to\your\pomodoro-timer\pomodoro.py"
      ```
 
    - Replace `C:\path\to\your\pomodoro.py` with the actual path to your Python script.
