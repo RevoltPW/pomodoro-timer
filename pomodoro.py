@@ -357,7 +357,7 @@ class PomodoroTimer(QWidget):
         layout = QVBoxLayout()
 
         self.opacity_slider = QSlider(Qt.Horizontal)
-        self.opacity_slider.setRange(0, 100)
+        self.opacity_slider.setRange(30, 100)
         self.opacity_slider.setValue(int(self.windowOpacity() * 100))
         self.opacity_slider.valueChanged.connect(self.set_opacity)
 
