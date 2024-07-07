@@ -46,7 +46,7 @@ class PomodoroTimer(QWidget):
         self.break_time = QTime(0, 5, 0)
         self.time_left = self.start_time
         self.sound_effect = QSoundEffect()
-        self.sound_effect.setSource(QUrl.fromLocalFile("res/complete.wav"))
+        self.sound_effect.setSource(QUrl.fromLocalFile(os.path.join(ICON_PATH, "complete.wav")))
         self.tasks = []
         self.completed_tasks = 0
         self.initUI()  # Initialize UI components first
